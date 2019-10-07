@@ -1,5 +1,5 @@
 <template>
-  <div class="uvt-video">
+  <div class="flex-col m-8">
     <video-player
       class="video-player-box"
       ref="videoPlayer"
@@ -14,7 +14,7 @@
       :fragments="internalFragments"
       class="uvt-timeline"
     />
-    <h3>Elapsed UVT: {{ displayElapsedUvt }}s / {{ displayDuration }}s ({{ displayElapsedPercentage }}% )</h3>
+    <UvtElapsed :elapsed="elapsedUvt" :duration="duration" />
   </div>
 </template>
 
@@ -25,6 +25,7 @@ import 'video.js/dist/video-js.css';
 import { videoPlayer } from 'vue-video-player';
 import timeConversions from '@/mixins/timeConversions';
 import uvtMixin from '@/mixins/uvt';
+import UvtElapsed from '@/components/UvtElapsed.vue';
 import UvtTimeline from '@/components/UvtTimeline.vue';
 
 // Local variable to track a single new viewed fragment
@@ -38,6 +39,7 @@ export default {
   mixins: [timeConversions, uvtMixin],
   components: {
     videoPlayer,
+    UvtElapsed,
     UvtTimeline,
   },
   props: {
@@ -83,7 +85,6 @@ export default {
         width: this.width,
       },
       duration: 0,
-      elapsedUvt: 0,
       internalFragments: [...this.fragments],
     };
   },
@@ -97,9 +98,11 @@ export default {
     displayElapsedPercentage() {
       return this.duration ? ((this.elapsedUvt / this.duration) * 100).toFixed(2) : 0;
     },
-  },
-  mounted() {
-    this.updateElapsedUvt();
+    elapsedUvt() {
+      const sorted = this.sortFragments(this.internalFragments);
+      const slices = this.generateSlices(sorted);
+      return this.calcUvt(slices);
+    },
   },
   methods: {
     onPlayerPlay(player) {
@@ -111,7 +114,6 @@ export default {
     onPlayerPause(player) {
       fragment.end = this.sec2ms(player.currentTime());
       this.internalFragments.push({ ...fragment });
-      this.updateElapsedUvt();
     },
     onPlayerTimeUpdate(player) {
       const currentTime = this.sec2ms(player.currentTime());
@@ -123,11 +125,6 @@ export default {
       } else {
         fragment.start = currentTime;
       }
-    },
-    updateElapsedUvt() {
-      const sorted = this.sortFragments(this.internalFragments);
-      const slices = this.generateSlices(sorted);
-      this.elapsedUvt = this.calcUvt(slices);
     },
   },
 };

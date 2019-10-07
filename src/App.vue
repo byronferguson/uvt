@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div class="mx-16">
     <UvtVideo
       v-for="video in videos"
       :key="video.id"
@@ -67,7 +67,7 @@ export default {
           src: '/assets/WhiteKeyboard.mp4',
           type: 'video/mp4',
           fragments: [],
-        }
+        },
       ],
     };
   },

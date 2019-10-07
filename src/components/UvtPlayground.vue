@@ -7,7 +7,11 @@
       :fragments="fragments"
     />
 
-    <h1 class="text-3xl text-right mr-8">Elapsed UVT: {{ elapsedUvt }} secs</h1>
+    <UvtElapsed
+      :elapsed="elapsedUvt"
+      :duration="durationInMs"
+      class="text-2xl text-right mr-8"
+    />
 
     <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
       <div class="mb-4">
@@ -18,17 +22,9 @@
           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="start"
           type="number"
+          min="1"
           v-model="duration"
         />
-      </div>
-      <div class="flex items-center justify-between">
-        <button
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          type="button"
-          @click.prevent="updateDuration"
-        >
-          Update Duration
-        </button>
       </div>
     </form>
 
@@ -66,13 +62,21 @@
       </div>
     </form>
 
-    <h3 class="mx-6 mt-8 mb-2">List of Fragments</h3>
+    <h3 class="h3">List of Fragments</h3>
     <ul>
       <li
         v-for="(fragment, index) in fragments"
         :key="index"
+        @click="() => removeFragment(index)"
+        class="py-2 flex items-center justify-between bg-gray-200 hover:bg-gray-300 rounded px-6 py-4 my-4"
       >
-        {{ index }}. {{ fragment.start }} - {{ fragment.end }} <button @click="() => removeFragment(index)">X</button>
+        <div class="flex-col justify-between text-xl">
+          <div>Start: {{ fragment.start }}</div>
+          <div>End: {{ fragment.end }}</div>
+        </div>
+        <button @click="() => removeFragment(index)" class="bg-red-600 hover:bg-red-900 text-white font-bold py-1 px-2 rounded">
+          <span class="lnr lnr-cross"></span>
+        </button>
       </li>
     </ul>
 
@@ -82,7 +86,7 @@
         v-for="(slice, index) in slices"
         :key="index"
       >
-        {{ index }}. {{ slice.start }} - {{ slice.end }}
+        {{ slice.start }} - {{ slice.end }}
       </li>
     </ul>
 
@@ -92,12 +96,14 @@
 <script>
 import timeConversions from '@/mixins/timeConversions';
 import uvtMixin from '@/mixins/uvt';
+import UvtElapsed from '@/components/UvtElapsed.vue';
 import UvtTimeline from '@/components/UvtTimeline.vue';
 
 export default {
   name: 'UvtPlayground',
   mixins: [timeConversions, uvtMixin],
   components: {
+    UvtElapsed,
     UvtTimeline,
   },
   data() {
@@ -135,19 +141,24 @@ export default {
   },
   computed: {
     width: () => window.screen.width,
+    durationInMs() {
+      return this.duration * 1000;
+    },
     elapsedUvt() {
-      return this.ms2sec(this.uvtFromFragments(this.fragments));
+      const sorted = this.sortFragments(this.fragments);
+      const slices = this.generateSlices(sorted);
+      return this.calcUvt(slices);
     },
     slices() {
       return this.generateSlices(this.fragments);
-    }
+    },
   },
   methods: {
     addFragment() {
       const start = +this.start;
       const end = +this.end;
 
-      if(start >= 0 && end <= (this.duration * 1000) && start <= end) {
+      if (start >= 0 && end <= (this.duration * 1000) && start <= end) {
         this.fragments.push({ start, end });
 
         this.start = null;
@@ -159,9 +170,13 @@ export default {
     removeFragment(index) {
       this.fragments.splice(index, 1);
     },
-    updateDuration() {
-      const duration = this.duration * 1000;
-    }
   },
 };
 </script>
+
+<style lang="postcss">
+.h3 {
+  @apply mx-6 mt-8 mb-2 text-3xl text-center font-bold;
+}
+
+</style>

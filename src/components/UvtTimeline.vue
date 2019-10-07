@@ -1,11 +1,19 @@
 <template>
-  <svg :viewBox="viewBox" :width="width" v-if="fragments.length">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    baseProfile="tiny"
+    version="1.2"
+    :viewBox="viewBox"
+    :width="width"
+    v-if="fragments.length"
+  >
     <line
       v-for="(slice, index) in slices"
       :key="index"
       :x1="slice.start"
       :x2="slice.end"
       :style="style"
+      :stroke-width="calcHeight()"
     />
   </svg>
 </template>
@@ -37,17 +45,19 @@ export default {
   },
   computed: {
     viewBox() {
-      return `0 0 ${this.duration} ${this.height}`;
-    },
-    height() {
-      return this.duration * 0.015;
+      return `0 0 ${this.duration} ${this.calcHeight()}`;
     },
     style() {
-      return `stroke:${this.color};stroke-width:${this.height}`;
+      return `stroke:${this.color}`;
     },
     slices() {
       const sorted = this.sortFragments(this.fragments);
       return this.generateSlices(sorted);
+    },
+  },
+  methods: {
+    calcHeight() {
+      return this.duration * 0.015;
     },
   },
 };

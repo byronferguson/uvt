@@ -1,7 +1,7 @@
 export default {
   methods: {
     sortFragments(fragments = []) {
-      return fragments.sort((a, b) => {
+      return [...fragments].sort((a, b) => {
         const startTime = a.start - b.start;
 
         // Fragments share a start time, so check end times
