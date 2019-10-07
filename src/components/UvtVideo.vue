@@ -23,6 +23,7 @@
 import 'video.js/dist/video-js.css';
 
 import { videoPlayer } from 'vue-video-player';
+import timeConversions from '@/mixins/timeConversions';
 import uvtMixin from '@/mixins/uvt';
 import UvtTimeline from '@/components/UvtTimeline.vue';
 
@@ -34,7 +35,7 @@ const fragment = {
 
 export default {
   name: 'UvtVideo',
-  mixins: [uvtMixin],
+  mixins: [timeConversions, uvtMixin],
   components: {
     videoPlayer,
     UvtTimeline,
@@ -101,8 +102,6 @@ export default {
     this.updateElapsedUvt();
   },
   methods: {
-    sec2ms: seconds => Math.floor(seconds * 1000),
-    ms2sec: ms => (ms / 1000).toFixed(2),
     onPlayerPlay(player) {
       if (this.duration < 1) {
         this.duration = this.sec2ms(this.$refs.videoPlayer.player.duration());
@@ -126,7 +125,6 @@ export default {
       }
     },
     updateElapsedUvt() {
-      console.log('updateElapsedUvt');
       const sorted = this.sortFragments(this.internalFragments);
       const slices = this.generateSlices(sorted);
       this.elapsedUvt = this.calcUvt(slices);

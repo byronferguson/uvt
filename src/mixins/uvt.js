@@ -55,5 +55,10 @@ export default {
     calcUvt(slices = [{}]) {
       return slices.reduce((total, slice) => total + (slice.end - slice.start), 0);
     },
+    uvtFromFragments(fragments = []) {
+      const sorted = this.sortFragments(fragments);
+      const slices = this.generateSlices(sorted);
+      return this.calcUvt(slices);
+    },
   },
 };

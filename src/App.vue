@@ -8,10 +8,14 @@
       :fragments="video.fragments"
       :width="500"
     />
+    <hr />
+    <h1 class="text-3xl text-center mt-1 mb-3 font-semibold">Playground</h1>
+    <UvtPlayground />
   </div>
 </template>
 
 <script>
+import UvtPlayground from '@/components/UvtPlayground.vue';
 import UvtVideo from '@/components/UvtVideo.vue';
 
 // 9000-12000 2000-4000 0-1000 0-500 2000-3000 500-5000
@@ -21,6 +25,7 @@ import UvtVideo from '@/components/UvtVideo.vue';
 export default {
   name: 'App',
   components: {
+    UvtPlayground,
     UvtVideo,
   },
   data() {
