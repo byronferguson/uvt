@@ -11,6 +11,9 @@
       </p>
     </section>
 
+    <h4 class="h3">
+      Timeline Slices <span v-if="!fragments.length" class="text-xs italic">(No Fragments to Display)</span>
+    </h4>
     <UvtTimeline
       class="mx-auto"
       :width="width"
@@ -140,7 +143,7 @@ export default {
     };
   },
   computed: {
-    width: () => window.screen.width,
+    width: () => window.screen.width - 128,
     durationInMs() {
       return this.duration * 1000;
     },

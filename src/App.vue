@@ -12,7 +12,7 @@
       />
     </section>
     <p v-else>
-      Disabled while online
+      Disabled while online. External CSS dependency is not bundling correctly.
     </p>
     <hr />
     <UvtPlayground />
