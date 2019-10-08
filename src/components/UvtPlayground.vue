@@ -1,5 +1,12 @@
 <template>
-  <div class="mb-64">
+  <div class="mb-12">
+    <h1 class="h1">Playground</h1>
+
+    <section class="card">
+      This section can be used to enter various time fragments for evaluation/testing purposes. The fragments are displayed
+      in a list, the "slices" are factored from these fragments and represented by the red line and displayed in a list.
+    </section>
+
     <UvtTimeline
       class="mx-auto"
       :width="width"
@@ -13,82 +20,90 @@
       class="text-2xl text-right mr-8"
     />
 
-    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-      <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="start">
-          Duration (s)
-        </label>
-        <input
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="start"
-          type="number"
-          min="1"
-          v-model="duration"
-        />
-      </div>
-    </form>
-
-    <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-      <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="start">
-          Start Time (ms)
-        </label>
-        <input
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="start"
-          type="number"
-          v-model="start"
-        />
-      </div>
-      <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="start">
-          End Time (ms)
-        </label>
-        <input
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="start"
-          type="number"
-          v-model="end"
-        />
-      </div>
-      <div class="flex items-center justify-between">
-        <button
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          type="button"
-          @click.prevent="addFragment"
-        >
-          Add Fragment
-        </button>
-      </div>
-    </form>
-
-    <h3 class="h3">List of Fragments</h3>
-    <ul>
-      <li
-        v-for="(fragment, index) in fragments"
-        :key="index"
-        @click="() => removeFragment(index)"
-        class="py-2 flex items-center justify-between bg-gray-200 hover:bg-gray-300 rounded px-6 py-4 my-4"
-      >
-        <div class="flex-col justify-between text-xl">
-          <div>Start: {{ fragment.start }}</div>
-          <div>End: {{ fragment.end }}</div>
+    <section class="flex">
+      <form class="card flex-1">
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="start">
+            Duration (s)
+          </label>
+          <input
+            class="input"
+            id="start"
+            type="number"
+            min="1"
+            v-model="duration"
+          />
         </div>
-        <button @click="() => removeFragment(index)" class="bg-red-600 hover:bg-red-900 text-white font-bold py-1 px-2 rounded">
-          <span class="lnr lnr-cross"></span>
-        </button>
-      </li>
-    </ul>
+      </form>
 
-    <h3 class="mx-6 mt-8 mb-2">List of Slices</h3>
-    <ul>
-      <li
-        v-for="(slice, index) in slices"
-        :key="index"
-      >
-        {{ slice.start }} - {{ slice.end }}
-      </li>
-    </ul>
+      <form class="card flex-1">
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="start">
+            Start Time (ms)
+          </label>
+          <input
+            class="input"
+            id="start"
+            type="number"
+            v-model="start"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="start">
+            End Time (ms)
+          </label>
+          <input
+            class="input"
+            id="start"
+            type="number"
+            v-model="end"
+          />
+        </div>
+        <div class="flex items-center justify-between">
+          <button @click.prevent="addFragment" class="btn" type="button">
+            Add Fragment
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="flex">
+      <div class="flex-col flex-1">
+        <h3 class="h3">List of Fragments</h3>
+        <ul class="card">
+          <li
+            v-for="(fragment, index) in fragments"
+            :key="index"
+            @click="() => removeFragment(index)"
+            class="fragment-list-item"
+          >
+            <div class="flex-col justify-between text-xl">
+              <div>Start: {{ fragment.start }}</div>
+              <div>End: {{ fragment.end }}</div>
+            </div>
+            <button @click="() => removeFragment(index)" class="btn" type="button">
+              <span class="lnr lnr-cross"></span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="flex-col flex-1">
+        <h3 class="h3">List of Slices</h3>
+        <ul class="card">
+          <li
+            v-for="(slice, index) in slices"
+            :key="index"
+            class="fragment-list-item"
+          >
+            <div class="flex-col justify-between text-xl">
+              <div>Start: {{ slice.start }}</div>
+              <div>End: {{ slice.end }}</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
 
   </div>
 </template>
@@ -111,32 +126,7 @@ export default {
       duration: 30,
       start: null,
       end: null,
-      fragments: [
-        {
-          start: 9000,
-          end: 12000,
-        },
-        {
-          start: 2000,
-          end: 4000,
-        },
-        {
-          start: 0,
-          end: 1000,
-        },
-        {
-          start: 0,
-          end: 500,
-        },
-        {
-          start: 2000,
-          end: 3000,
-        },
-        {
-          start: 500,
-          end: 5000,
-        },
-      ],
+      fragments: [],
     };
   },
   computed: {
@@ -145,26 +135,25 @@ export default {
       return this.duration * 1000;
     },
     elapsedUvt() {
-      const sorted = this.sortFragments(this.fragments);
-      const slices = this.generateSlices(sorted);
-      return this.calcUvt(slices);
+      return this.calcUvt(this.slices);
     },
     slices() {
-      return this.generateSlices(this.fragments);
+      const sorted = this.sortFragments(this.fragments);
+      return this.generateSlices(sorted);
     },
   },
   methods: {
     addFragment() {
+      // Convert to number from string
       const start = +this.start;
       const end = +this.end;
 
+      // Determine if current values are valid
       if (start >= 0 && end <= (this.duration * 1000) && start <= end) {
         this.fragments.push({ start, end });
 
         this.start = null;
         this.end = null;
-      } else {
-        console.log('BAD');
       }
     },
     removeFragment(index) {
@@ -174,9 +163,45 @@ export default {
 };
 </script>
 
-<style lang="postcss">
+<style lang="postcss" scoped>
+.h1 {
+  @apply mx-6 mt-8 mb-6 text-5xl text-center font-bold;
+}
+
 .h3 {
   @apply mx-6 mt-8 mb-2 text-3xl text-center font-bold;
+}
+
+.card {
+  @apply bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mx-4;
+}
+
+.btn {
+  @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
+
+  &:hover {
+    @apply bg-blue-700;
+  }
+
+  &:focus {
+    @apply outline-none shadow-outline;
+  }
+}
+
+.input {
+  @apply shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight;
+
+  &:focus {
+    @apply outline-none shadow-outline;
+  }
+}
+
+.fragment-list-item {
+  @apply flex items-center justify-between bg-gray-200 rounded px-6 py-4 my-4;
+
+  &:hover {
+    @apply bg-gray-300;
+  }
 }
 
 </style>
