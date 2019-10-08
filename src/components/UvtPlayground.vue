@@ -1,10 +1,14 @@
 <template>
   <div class="mb-12">
-    <h1 class="h1">Playground</h1>
+    <h1 class="h1">Fragment Playground</h1>
 
     <section class="card">
-      This section can be used to enter various time fragments for evaluation/testing purposes. The fragments are displayed
-      in a list, the "slices" are factored from these fragments and represented by the red line and displayed in a list.
+      <p>
+        This section can be used to enter various time fragments
+        for evaluation/testing purposes. The fragments are displayed
+        in a list, the "slices" are factored from these fragments and
+        represented by the red line and displayed in a list.
+      </p>
     </section>
 
     <UvtTimeline
@@ -70,7 +74,7 @@
     <section class="flex">
       <div class="flex-col flex-1">
         <h3 class="h3">List of Fragments</h3>
-        <ul class="card">
+        <ul class="card" v-if="fragments.length">
           <li
             v-for="(fragment, index) in fragments"
             :key="index"
@@ -86,11 +90,14 @@
             </button>
           </li>
         </ul>
+        <div class="card" v-else>
+          <h3 class="h4">No Fragments to Display</h3>
+        </div>
       </div>
 
       <div class="flex-col flex-1">
         <h3 class="h3">List of Slices</h3>
-        <ul class="card">
+        <ul class="card" v-if="slices.length">
           <li
             v-for="(slice, index) in slices"
             :key="index"
@@ -102,6 +109,9 @@
             </div>
           </li>
         </ul>
+        <div class="card" v-else>
+          <h3 class="h4">No Slices to Display</h3>
+        </div>
       </div>
     </section>
 
@@ -170,6 +180,10 @@ export default {
 
 .h3 {
   @apply mx-6 mt-8 mb-2 text-3xl text-center font-bold;
+}
+
+.h4 {
+  @apply text-xl text-center font-light;
 }
 
 .card {

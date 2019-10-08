@@ -1,13 +1,16 @@
 <template>
   <div class="mx-16">
-    <UvtVideo
-      v-for="video in videos"
-      :key="video.id"
-      :src="video.src"
-      :type="video.type"
-      :fragments="video.fragments"
-      :width="500"
-    />
+    <h1 class="h1">Playable Videos</h1>
+    <section class="flex justify-around">
+      <UvtVideo
+        v-for="video in videos"
+        :key="video.id"
+        :src="video.src"
+        :type="video.type"
+        :fragments="video.fragments"
+        :width="500"
+      />
+    </section>
     <hr />
     <UvtPlayground />
   </div>
@@ -72,3 +75,9 @@ export default {
   },
 };
 </script>
+
+<style lang="postcss" scoped>
+.h1 {
+  @apply mx-6 mt-8 mb-6 text-5xl text-center font-bold;
+}
+</style>
