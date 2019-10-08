@@ -1,7 +1,7 @@
 <template>
   <div class="mx-16">
     <h1 class="h1">Playable Videos</h1>
-    <section class="flex justify-around">
+    <section class="flex justify-around" v-if="isLocalhost">
       <UvtVideo
         v-for="video in videos"
         :key="video.id"
@@ -11,6 +11,9 @@
         :width="500"
       />
     </section>
+    <p v-else>
+      Disabled while online
+    </p>
     <hr />
     <UvtPlayground />
   </div>
@@ -72,6 +75,11 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    isLocalhost() {
+      return window.location.hostname === 'localhost';
+    },
   },
 };
 </script>
